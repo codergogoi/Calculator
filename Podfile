@@ -9,6 +9,7 @@ target 'Calculator' do
   pod 'Firebase/Core'
   pod 'Firebase/RemoteConfig'
   pod 'Firebase/Analytics'
+  pod 'Firebase/Crashlytics'
 
   target 'CalculatorTests' do
     inherit! :search_paths

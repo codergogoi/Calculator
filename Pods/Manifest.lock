@@ -6,6 +6,9 @@ PODS:
     - FirebaseAnalytics (= 6.7.0)
   - Firebase/CoreOnly (6.29.0):
     - FirebaseCore (= 6.9.2)
+  - Firebase/Crashlytics (6.29.0):
+    - Firebase/CoreOnly
+    - FirebaseCrashlytics (~> 4.3.1)
   - Firebase/RemoteConfig (6.29.0):
     - Firebase/CoreOnly
     - FirebaseRemoteConfig (~> 4.8.0)
@@ -29,6 +32,12 @@ PODS:
     - GoogleUtilities/Environment (~> 6.7)
     - GoogleUtilities/Logger (~> 6.7)
     - nanopb (~> 1.30905.0)
+  - FirebaseCrashlytics (4.3.1):
+    - FirebaseCore (~> 6.8)
+    - FirebaseInstallations (~> 1.1)
+    - GoogleDataTransport (~> 7.0)
+    - nanopb (~> 1.30905.0)
+    - PromisesObjC (~> 1.2)
   - FirebaseInstallations (1.5.0):
     - FirebaseCore (~> 6.8)
     - GoogleUtilities/Environment (~> 6.7)
@@ -77,6 +86,7 @@ PODS:
 DEPENDENCIES:
   - Firebase/Analytics
   - Firebase/Core
+  - Firebase/Crashlytics
   - Firebase/RemoteConfig
 
 SPEC REPOS:
@@ -86,6 +96,7 @@ SPEC REPOS:
     - FirebaseAnalytics
     - FirebaseCore
     - FirebaseCoreDiagnostics
+    - FirebaseCrashlytics
     - FirebaseInstallations
     - FirebaseRemoteConfig
     - GoogleAppMeasurement
@@ -100,6 +111,7 @@ SPEC CHECKSUMS:
   FirebaseAnalytics: aa522dce9fd93002ba1554467d23ce7092323000
   FirebaseCore: 7930a1946517d94256d857f97371ed993b55f7bd
   FirebaseCoreDiagnostics: 7535fe695737f8c5b350584292a70b7f8ff0357b
+  FirebaseCrashlytics: 863c851b034baeb3116cd2c91743e37de2dcedfc
   FirebaseInstallations: 3c520c951305cbf9ca54eb891ff9e6d1fd384881
   FirebaseRemoteConfig: 521ff38593bed36fcb6f466fb6fffa99a753d783
   GoogleAppMeasurement: 345d365fd105e6682bf5084783a5352a3db26820
@@ -108,6 +120,6 @@ SPEC CHECKSUMS:
   nanopb: c43f40fadfe79e8b8db116583945847910cbabc9
   PromisesObjC: b48e0338dbbac2207e611750777895f7a5811b75
 
-PODFILE CHECKSUM: 43fe50a95f808d069cede1d96ac6e0dd7d7f5937
+PODFILE CHECKSUM: b90dfbd1524eeba22010757174e436221ac949d8
 
 COCOAPODS: 1.8.4
