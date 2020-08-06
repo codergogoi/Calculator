@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  Calculator
+
+  Created by JAYANTA GOGOI on 8/6/20.
+  Copyright © 2020 JAYANTA GOGOI. All rights reserved.
+*/
+"btn_map" = "Map";
+"placeholder_latitude" = "Latitude";
+"placeholder_longitude" = "Longitude";
+"address_promprt" = "Enter Latitude and Longitude to find address";
+"action_ok" = "Ok";
+"error_message_default" = "Oops! Something went wrong!";
+"error_message_connectivity" = "You are not connected to internet! this operation is required internet access!";
+
