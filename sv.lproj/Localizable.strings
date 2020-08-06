@@ -9,6 +9,7 @@
 "placeholder_latitude" = "Latitud";
 "placeholder_longitude" = "Longitud";
 "address_promprt" = "Ange bredd och bredd för att hitta adress";
+"address_waiting" = "Sök efter adressen är ...";
 "action_ok" = "Ok";
 "error_message_default" = "hoppsan! Något gick fel!";
 "error_message_connectivity" = "Du är inte ansluten till internet! denna operation krävs internetåtkomst!";

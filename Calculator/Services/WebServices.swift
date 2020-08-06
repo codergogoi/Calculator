@@ -9,7 +9,7 @@
 import UIKit
 
 
-let BaseURL  = "http://localhost:8000/"
+let BaseURL  =  "https://leovegas.herokuapp.com/"
 
 struct WebSerivce {
     
