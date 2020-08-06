@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  Calculator
+
+  Created by JAYANTA GOGOI on 8/6/20.
+  Copyright © 2020 JAYANTA GOGOI. All rights reserved.
+*/
+"btn_map" = "carte";
+"placeholder_latitude" = "Latitude";
+"placeholder_longitude" = "Longitude";
+"address_promprt" = "Entrez la latitude et la longitude pour trouver l'adresse";
+"action_ok" = "D'accord";
+"error_message_default" = "Oups! Un problème est survenu!";
+"error_message_connectivity" = "Vous n'êtes pas connecté à Internet! cette opération nécessite un accès internet!";
+

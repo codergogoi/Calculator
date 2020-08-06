@@ -1,0 +1,15 @@
+/* 
+  Localizable.strings
+  Calculator
+
+  Created by JAYANTA GOGOI on 8/6/20.
+  Copyright © 2020 JAYANTA GOGOI. All rights reserved.
+*/
+"btn_map" = "Karta";
+"placeholder_latitude" = "Latitud";
+"placeholder_longitude" = "Longitud";
+"address_promprt" = "Ange bredd och bredd för att hitta adress";
+"action_ok" = "Ok";
+"error_message_default" = "hoppsan! Något gick fel!";
+"error_message_connectivity" = "Du är inte ansluten till internet! denna operation krävs internetåtkomst!";
+
