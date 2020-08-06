@@ -13,7 +13,7 @@ import Firebase
 
 class CalculatorViewController: UIViewController {
     
-   //MARK: - UI Components
+    //MARK: - UI Components
     let resultView: UIView = {
         let view = UIView()
         view.noAutoConst()
@@ -56,10 +56,10 @@ class CalculatorViewController: UIViewController {
         }
     }
     
- 
+    
     //ViewModel
     fileprivate var viewModel: CalculatorViewModel!
-       
+    
     
     //Others
     let monitor = NWPathMonitor()
@@ -72,7 +72,7 @@ class CalculatorViewController: UIViewController {
     
     //MARK: - FireBase
     var remoteConfig: RemoteConfig!
-     
+    
     private func setupRemoteConfigDefaults(){
         let defaultValues = [
             RemoteKeys.isMap.rawValue : true as NSObject,
@@ -89,9 +89,9 @@ class CalculatorViewController: UIViewController {
     }
     
     private func fetchRemoteConfig(){
-        //        let settings = RemoteConfigSettings()
-        //        settings.minimumFetchInterval = 0
-        //        remoteConfig.configSettings = settings
+        let settings = RemoteConfigSettings()
+        settings.minimumFetchInterval = 0
+        remoteConfig.configSettings = settings
         remoteConfig.fetchAndActivate { (status, error) in
             if status == .successFetchedFromRemote {
                 self.remoteConfig.activate { (changed, error) in
@@ -106,14 +106,14 @@ class CalculatorViewController: UIViewController {
     
     //MARK: - Check Connectivity
     private func checkInternetConnection(){
-          monitor.pathUpdateHandler = { path in
-              if path.status == .satisfied {
-                  self.isIntenetAvailable = true
-              }else{
-                  self.isIntenetAvailable = false
-               }
-          }
-      }
+        monitor.pathUpdateHandler = { path in
+            if path.status == .satisfied {
+                self.isIntenetAvailable = true
+            }else{
+                self.isIntenetAvailable = false
+            }
+        }
+    }
     
     
     //MARK: - View LifeCycle
@@ -128,11 +128,8 @@ class CalculatorViewController: UIViewController {
         let queue = DispatchQueue.global(qos: .background)
         monitor.start(queue: queue)
         checkInternetConnection()
-        Crashlytics.crashlytics().log("Check for Custom Log")
-
-        
     }
-     
+    
     override func viewWillLayoutSubviews() {
         self.view.layoutIfNeeded()
     }
@@ -197,7 +194,7 @@ extension CalculatorViewController {
         self.setupAlertView()
         
     }
-
+    
     
     fileprivate func setupLocationView(){
         
@@ -223,7 +220,7 @@ extension CalculatorViewController {
     }
     
     fileprivate func setupAlertView(){
-         resultView.addSubview(alert)
+        resultView.addSubview(alert)
         alert.leadingAnchor.constraint(equalTo: resultView.leadingAnchor).isActive = true
         alert.trailingAnchor.constraint(equalTo: resultView.trailingAnchor).isActive = true
         alert.topAnchor.constraint(equalTo: resultView.topAnchor).isActive = true
@@ -234,7 +231,7 @@ extension CalculatorViewController {
             
             self?.isShowAlert = false
         }
-
+        
         
     }
     
@@ -275,7 +272,7 @@ extension CalculatorViewController {
         
         switch dataModel {
         case .map:
-             if !self.isIntenetAvailable  {
+            if !self.isIntenetAvailable  {
                 self.isShowAlert = true
                 return
             }
@@ -283,7 +280,7 @@ extension CalculatorViewController {
             self.locationView.clearHistory()
             onTapMap()
             Analytics.logEvent("map", parameters: nil)
-                     
+            
         case .btc, .divide, .multiply, .minus, .plus, .equal, .cos, .sin:
             
             if dataModel == .btc {
@@ -325,8 +322,8 @@ extension CalculatorViewController {
     // Show Hide Location View Animation
     fileprivate func onTapMap(){
         
+        self.dismiss(animated: true, completion: nil)
         
- 
         self.onLocationOperation = !self.onLocationOperation
         
         UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseInOut, animations: {

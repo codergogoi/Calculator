@@ -8,7 +8,6 @@
 
 import UIKit
  
-
 class CalculatorViewModel {
     
     // essential private properties
@@ -71,6 +70,7 @@ extension CalculatorViewModel {
         self.currentNumber = ""
     }
     
+    
     func currentOperation(dataModel: ButtonAttributes, completion: @escaping(_ number: String) ->()){
         
         var result = ""
@@ -78,6 +78,9 @@ extension CalculatorViewModel {
         case .divide, .multiply, .minus, .plus:
             self.currentOperation = dataModel
             result = lastNumber
+        case .cos, .sin:
+            self.currentOperation = dataModel
+            result = formattedResult()
         case .ac:
             self.currentOperation = .ac
             self.lastNumber = ""
@@ -118,12 +121,18 @@ extension CalculatorViewModel {
     
     fileprivate func formattedResult() -> String{
         
-        let calculatedResulr = self.performOperations()
+        var calculatedResult: Double = 0
         
-        if calculatedResulr.truncatingRemainder(dividingBy: 1) == 0 {
-            return "\(Int(calculatedResulr))"
+        if currentOperation == .cos || currentOperation == .sin {
+           calculatedResult = self.performDegreeCalculation()
         }else{
-            return "\(calculatedResulr)"
+          calculatedResult =  self.performOperations()
+        }
+ 
+        if calculatedResult.truncatingRemainder(dividingBy: 1) == 0 {
+            return "\(Int(calculatedResult))"
+        }else{
+            return "\(calculatedResult)"
         }
     }
     
@@ -150,6 +159,20 @@ extension CalculatorViewModel {
         }
         return result
         
+    }
+    
+    fileprivate func performDegreeCalculation() -> Double{
+        
+        guard let degrees = Double(self.lastNumber) else{
+                   return 0
+        }
+        
+        if currentOperation == .cos{
+            return cos(degrees * .pi / 180)
+        }else{
+            return  sin(degrees * .pi / 180)
+        }
+      
     }
     
 }
@@ -191,5 +214,15 @@ extension CalculatorViewModel{
         
     }
      
+    
+}
+//MARK: - UnitTest Input
+extension CalculatorViewModel{
+    
+    func mockInputs(leftNumber: String = "0", rightNumber: String = "0", operation: ButtonAttributes){
+        self.lastNumber = leftNumber
+        self.currentNumber = rightNumber
+        self.currentOperation = operation
+    }
     
 }

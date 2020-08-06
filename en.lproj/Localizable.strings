@@ -9,6 +9,7 @@
 "placeholder_latitude" = "Latitude";
 "placeholder_longitude" = "Longitude";
 "address_promprt" = "Enter Latitude and Longitude to find address";
+"address_waiting" = "Checking for the address is ...";
 "action_ok" = "Ok";
 "error_message_default" = "Oops! Something went wrong!";
 "error_message_connectivity" = "You are not connected to internet! this operation is required internet access!";

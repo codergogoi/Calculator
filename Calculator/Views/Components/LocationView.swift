@@ -163,6 +163,7 @@ class LocationView: UIView {
     
     @objc func onTapFindAddress(_ sender: LatLongButton){
         if self.currentLatitude.count > 0 && self.currentLongitude.count > 0 {
+            self.currentAddress = NSLocalizedString("address_waiting", comment: "")
             self.didTapFindAddress?(self.currentLatitude, self.currentLongitude)
         }
         
