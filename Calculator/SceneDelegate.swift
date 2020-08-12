@@ -22,7 +22,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window = UIWindow(frame: uiWindowScene.coordinateSpace.bounds)
         window?.windowScene = uiWindowScene
-        window?.rootViewController =  CalculatorViewController()
+        //        window?.rootViewController =  ViewController() // CalculatorViewController()
+        window?.rootViewController =   CalculatorViewController()
         window?.makeKeyAndVisible()
         
     }
