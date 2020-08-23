@@ -16,8 +16,8 @@ class ViewController: UIViewController {
     }
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        let calculator = CalculatorViewController()
-//        self.present(calculator, animated: true, completion: nil)
+        let calculator = CalculatorViewController()
+        self.present(calculator, animated: true, completion: nil)
         
     }
 

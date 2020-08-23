@@ -49,6 +49,7 @@ class CalculatorViewController: UIViewController {
     
     //alert View
     let alert = AppAlert()
+    
     var alertTransform: CGAffineTransform?
     var isShowAlert = false{
         didSet{
@@ -58,11 +59,12 @@ class CalculatorViewController: UIViewController {
     
     
     //ViewModel
-    fileprivate var viewModel: CalculatorViewModel!
+    fileprivate var viewModel: CalculatorViewModel?
     
     
     //Others
-    let monitor = NWPathMonitor()
+    var monitor: NWPathMonitor?
+    
     var isIntenetAvailable = false
     private let spacing: CGFloat = 10
     var lastNumber: Double = 0
@@ -71,7 +73,7 @@ class CalculatorViewController: UIViewController {
     
     
     //MARK: - FireBase
-    var remoteConfig: RemoteConfig!
+    var remoteConfig: RemoteConfig?
     
     private func setupRemoteConfigDefaults(){
         let defaultValues = [
@@ -85,32 +87,32 @@ class CalculatorViewController: UIViewController {
             RemoteKeys.isSign.rawValue: true as NSObject,
         ]
         remoteConfig = RemoteConfig.remoteConfig()
-        remoteConfig.setDefaults(defaultValues)
+        remoteConfig?.setDefaults(defaultValues)
     }
     
     private func fetchRemoteConfig(){
         let settings = RemoteConfigSettings()
         settings.minimumFetchInterval = 0
-        remoteConfig.configSettings = settings
-        remoteConfig.fetchAndActivate { (status, error) in
+        remoteConfig?.configSettings = settings
+        remoteConfig?.fetchAndActivate { [weak self] (status, error) in
             if status == .successFetchedFromRemote {
-                self.remoteConfig.activate { (changed, error) in
+                self?.remoteConfig?.activate { (changed, error) in
                     DispatchQueue.main.async {
-                        self.onSetupToggleFunctions()
+                        self?.onSetupToggleFunctions()
                     }
                 }
             }
-            
+
         }
     }
     
     //MARK: - Check Connectivity
     private func checkInternetConnection(){
-        monitor.pathUpdateHandler = { path in
+        monitor?.pathUpdateHandler = { [weak self] path in
             if path.status == .satisfied {
-                self.isIntenetAvailable = true
+                self?.isIntenetAvailable = true
             }else{
-                self.isIntenetAvailable = false
+                self?.isIntenetAvailable = false
             }
         }
     }
@@ -125,8 +127,9 @@ class CalculatorViewController: UIViewController {
         self.fetchRemoteConfig()
         self.setupViews()
         self.onSetupToggleFunctions()
+        monitor = NWPathMonitor()
         let queue = DispatchQueue.global(qos: .background)
-        monitor.start(queue: queue)
+        monitor?.start(queue: queue)
         checkInternetConnection()
     }
     
@@ -137,6 +140,18 @@ class CalculatorViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
+    
+//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+//        fatalError("Touch not responding... fake news!")
+//    }
+     
+    
+    deinit {
+        print("================================")
+        print("Deinit Successfully: No retain cycle detected! :)")
+        print("================================")
+
+    }
 }
 
 
@@ -144,56 +159,62 @@ class CalculatorViewController: UIViewController {
 //MARK: - UI Setup
 extension CalculatorViewController {
     
+    
     fileprivate func setupViews(){
         
         self.view.addSubview(resultView)
-        
+
         self.contentView.spacing = spacing
         self.view.addSubview(contentView)
-        
+
         resultView.leadingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.leadingAnchor).isActive = true
         resultView.trailingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.trailingAnchor).isActive = true
         resultView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor).isActive = true
         resultView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.35, constant: 0).isActive = true
-        
+
         resultView.addSubview(lblResult)
         lblResult.leadingAnchor.constraint(equalTo: resultView.leadingAnchor, constant: spacing).isActive = true
         lblResult.trailingAnchor.constraint(equalTo: resultView.trailingAnchor, constant: -spacing).isActive = true
         lblResult.bottomAnchor.constraint(equalTo: resultView.bottomAnchor, constant: -spacing).isActive = true
-        
+
         contentView.leadingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.leadingAnchor).isActive = true
         contentView.trailingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.trailingAnchor).isActive = true
         contentView.topAnchor.constraint(equalTo: resultView.bottomAnchor, constant: spacing).isActive = true
         contentView.bottomAnchor.constraint(equalTo: self.view.layoutMarginsGuide.bottomAnchor).isActive = true
         
-        for row in self.viewModel.options() {
-            let stackView = UIStackView()
-            stackView.noAutoConst()
-            stackView.axis = .horizontal
-            stackView.distribution = .fillEqually
-            stackView.spacing = spacing
-            contentView.addArrangedSubview(stackView)
-            for button in row{
-                let btn = CalculatorButton()
-                btn.dataModel = button
-                btn.didTap = {[weak self] dataModel in
-                    self?.didTapButton(dataModel: dataModel)
-                    //reset View Logic
-                    switch dataModel {
-                    case .divide,.multiply, .minus, .plus:
-                        self?.lastSelectedOperator = btn
-                    default:
-                        return
+        
+        if let options = self.viewModel?.options(){
+            for row in options {
+                let stackView = UIStackView()
+                stackView.noAutoConst()
+                stackView.axis = .horizontal
+                stackView.distribution = .fillEqually
+                stackView.spacing = spacing
+                contentView.addArrangedSubview(stackView)
+                for button in row{
+                    let btn = CalculatorButton()
+                    btn.dataModel = button
+                    btn.didTap = {[weak self] dataModel in
+                        self?.didTapButton(dataModel: dataModel)
+                        //reset View Logic
+                        switch dataModel {
+                        case .divide,.multiply, .minus, .plus:
+                            self?.lastSelectedOperator = btn
+                        default:
+                            return
+                        }
                     }
+                    stackView.addArrangedSubview(btn)
                 }
-                stackView.addArrangedSubview(btn)
             }
         }
-        
+
+ 
         self.setupLocationView()
         self.setupAlertView()
         
     }
+    
     
     
     fileprivate func setupLocationView(){
@@ -206,15 +227,26 @@ extension CalculatorViewController {
         self.locationViewIntialTransform = self.locationView.transform
         self.locationView.transform =  locationView.transform.translatedBy(x: locationView.transform.tx, y: -500)
         locationView.didTapLatLong = {[weak self] in
-            self?.viewModel.resetLastNumber()
-        }
-        
+            guard let self = self else {
+                return
+            }
+            self.viewModel?.resetLastNumber()
+          }
+
         locationView.didTapFindAddress = { [weak self] (lat, long) in
-            self?.viewModel.getAddressFromLatLong(lat: lat, long: long, completion: { [weak self] in
-                self?.locationView.currentAddress = self?.viewModel.currentAddress
-                Analytics.logEvent("address_search", parameters: ["lat": lat, "long": long, "address": self?.viewModel.currentAddress ?? "Invalid Lat long used to search Address" ])
-            })
             
+            guard let self = self else { return }
+            
+             self.viewModel?.getAddressFromLatLong(lat: lat, long: long, completion: { [weak self] in
+                
+                if let self = self{
+                    let currentAddress = self.viewModel?.currentAddress
+                    self.locationView.currentAddress = currentAddress
+                    Analytics.logEvent("address_search", parameters: ["lat": lat, "long": long, "address": currentAddress ?? "Invalid Lat long used to search Address" ])
+                }
+             
+           })
+              
         }
         
     }
@@ -228,25 +260,25 @@ extension CalculatorViewController {
         self.alertTransform = alert.transform
         self.alert.transform =  alert.transform.translatedBy(x: alert.transform.tx, y: -500)
         self.alert.didTapOk = {[weak self] in
-            
-            self?.isShowAlert = false
+            guard let self = self else { return }
+            self.isShowAlert = false
         }
-        
-        
+ 
     }
     
     fileprivate func onSetupToggleFunctions(){
         
         _ = self.contentView.subviews.compactMap { (stackView) -> UIStackView? in
-            
-            for button  in stackView.subviews{
+             for button  in stackView.subviews{
                 if let currentButton = button as? CalculatorButton{
                     if let key = currentButton.dataModel?.remoteKey{
                         if key != .none{
-                            if(!self.remoteConfig.configValue(forKey: key.rawValue).boolValue){
-                                currentButton.removeFromSuperview()
+                            if let status = self.remoteConfig?.configValue(forKey: key.rawValue).boolValue{
+                                if !status{
+                                     currentButton.removeFromSuperview()
+                                }
                             }
-                        }
+                         }
                     }
                 }
             }
@@ -297,16 +329,18 @@ extension CalculatorViewController {
                 onTapMap()
             }
             
-            self.viewModel.currentOperation(dataModel: dataModel) { (result) in
+            self.viewModel?.currentOperation(dataModel: dataModel) { [weak self] (result) in
+                guard let self = self else { return }
                 DispatchQueue.main.async {
                     self.lblResult.text = result
                 }
-            }
+                }
         default:
-            if let existingOperation = self.lastSelectedOperator{
+             if let existingOperation = self.lastSelectedOperator{
                 existingOperation.resetToggle()
             }
-            self.viewModel.currentOperation(dataModel: dataModel) { (result) in
+            self.viewModel?.currentOperation(dataModel: dataModel) { [weak self] (result) in
+                guard let self = self else { return  }
                 DispatchQueue.main.async {
                     if self.onLocationOperation{
                         self.locationView.currentInput = result
@@ -322,10 +356,10 @@ extension CalculatorViewController {
     // Show Hide Location View Animation
     fileprivate func onTapMap(){
         
-        self.dismiss(animated: true, completion: nil)
-        
+//        self.dismiss(animated: true, completion: nil) // to check retain cycle
+             
         self.onLocationOperation = !self.onLocationOperation
-        
+         
         UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseInOut, animations: {
             if self.onLocationOperation{
                 if let initialTransform = self.locationViewIntialTransform{
@@ -339,8 +373,7 @@ extension CalculatorViewController {
             }
             
         }, completion: nil)
-        
-    }
+     }
     
     //Show Hide Alert View Animation
     fileprivate func onShowHideAlert(){
