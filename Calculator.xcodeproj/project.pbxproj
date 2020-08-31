@@ -18,18 +18,12 @@
 		5D28339124D928AA00273317 /* CalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D28339024D928AA00273317 /* CalculatorUITests.swift */; };
 		5D38DDD424DBB66200015B74 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 5D38DDD624DBB66200015B74 /* Localizable.strings */; };
 		5D38DDDB24DBBF2E00015B74 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 5D38DDDA24DBBF2E00015B74 /* GoogleService-Info.plist */; };
-		5D960B2F24DA788A00B8A41D /* WebServices.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D960B2E24DA788A00B8A41D /* WebServices.swift */; };
-		5D960B3124DA78A000B8A41D /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D960B3024DA78A000B8A41D /* Location.swift */; };
-		5D960B3324DA78AD00B8A41D /* BitCoin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D960B3224DA78AD00B8A41D /* BitCoin.swift */; };
 		5D960B3524DA78BD00B8A41D /* ButtonAttributes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D960B3424DA78BD00B8A41D /* ButtonAttributes.swift */; };
 		5D960B3724DA78D300B8A41D /* CalculatorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D960B3624DA78D300B8A41D /* CalculatorViewModel.swift */; };
 		5D960B3924DA78E800B8A41D /* CalculatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D960B3824DA78E800B8A41D /* CalculatorViewController.swift */; };
 		5D960B3B24DA790400B8A41D /* UIView+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D960B3A24DA790400B8A41D /* UIView+Ext.swift */; };
 		5D960B3D24DA791400B8A41D /* Color+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D960B3C24DA791400B8A41D /* Color+Ext.swift */; };
-		5DA6947C24DA8AC200A160AC /* LocationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA6947B24DA8AC200A160AC /* LocationView.swift */; };
-		5DA6947E24DA8AF000A160AC /* LatLongButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA6947D24DA8AF000A160AC /* LatLongButton.swift */; };
 		5DA6948024DA8B1000A160AC /* CalculatorButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA6947F24DA8B1000A160AC /* CalculatorButton.swift */; };
-		5DA6948224DAA5DA00A160AC /* AppAlert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA6948124DAA5DA00A160AC /* AppAlert.swift */; };
 		5DA6948424DAC85200A160AC /* Button+Ext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5DA6948324DAC85200A160AC /* Button+Ext.swift */; };
 		F78389ED5BCC936D2C655E11 /* Pods_Calculator.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F9C49691C9F3EEA9A42706D7 /* Pods_Calculator.framework */; };
 /* End PBXBuildFile section */
@@ -75,18 +69,12 @@
 		5D38DDD824DBB66D00015B74 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5D38DDD924DBB66F00015B74 /* sv */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sv; path = sv.lproj/Localizable.strings; sourceTree = "<group>"; };
 		5D38DDDA24DBBF2E00015B74 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		5D960B2E24DA788A00B8A41D /* WebServices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebServices.swift; sourceTree = "<group>"; };
-		5D960B3024DA78A000B8A41D /* Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
-		5D960B3224DA78AD00B8A41D /* BitCoin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitCoin.swift; sourceTree = "<group>"; };
 		5D960B3424DA78BD00B8A41D /* ButtonAttributes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonAttributes.swift; sourceTree = "<group>"; };
 		5D960B3624DA78D300B8A41D /* CalculatorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorViewModel.swift; sourceTree = "<group>"; };
 		5D960B3824DA78E800B8A41D /* CalculatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorViewController.swift; sourceTree = "<group>"; };
 		5D960B3A24DA790400B8A41D /* UIView+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Ext.swift"; sourceTree = "<group>"; };
 		5D960B3C24DA791400B8A41D /* Color+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Ext.swift"; sourceTree = "<group>"; };
-		5DA6947B24DA8AC200A160AC /* LocationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationView.swift; sourceTree = "<group>"; };
-		5DA6947D24DA8AF000A160AC /* LatLongButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatLongButton.swift; sourceTree = "<group>"; };
 		5DA6947F24DA8B1000A160AC /* CalculatorButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorButton.swift; sourceTree = "<group>"; };
-		5DA6948124DAA5DA00A160AC /* AppAlert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAlert.swift; sourceTree = "<group>"; };
 		5DA6948324DAC85200A160AC /* Button+Ext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Button+Ext.swift"; sourceTree = "<group>"; };
 		61BCC09349E65EFFAFD7A000 /* Pods-Calculator-CalculatorUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Calculator-CalculatorUITests.debug.xcconfig"; path = "Target Support Files/Pods-Calculator-CalculatorUITests/Pods-Calculator-CalculatorUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		75DFFE30F4296B2582D64BEF /* Pods_CalculatorTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CalculatorTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -167,7 +155,6 @@
 				5D960B2924DA781200B8A41D /* ViewModels */,
 				5D960B2A24DA781C00B8A41D /* Views */,
 				5D960B2B24DA782100B8A41D /* Extensions */,
-				5D960B2D24DA786300B8A41D /* Services */,
 				5D28337224D928A700273317 /* ViewController.swift */,
 				5D960B2C24DA782B00B8A41D /* Assets */,
 				5D28337C24D928AA00273317 /* Info.plist */,
@@ -197,8 +184,6 @@
 		5D960B2824DA780A00B8A41D /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				5D960B3024DA78A000B8A41D /* Location.swift */,
-				5D960B3224DA78AD00B8A41D /* BitCoin.swift */,
 				5D960B3424DA78BD00B8A41D /* ButtonAttributes.swift */,
 			);
 			path = Models;
@@ -240,21 +225,10 @@
 			path = Assets;
 			sourceTree = "<group>";
 		};
-		5D960B2D24DA786300B8A41D /* Services */ = {
-			isa = PBXGroup;
-			children = (
-				5D960B2E24DA788A00B8A41D /* WebServices.swift */,
-			);
-			path = Services;
-			sourceTree = "<group>";
-		};
 		5DA6947A24DA8AB000A160AC /* Components */ = {
 			isa = PBXGroup;
 			children = (
-				5DA6947B24DA8AC200A160AC /* LocationView.swift */,
-				5DA6947D24DA8AF000A160AC /* LatLongButton.swift */,
 				5DA6947F24DA8B1000A160AC /* CalculatorButton.swift */,
-				5DA6948124DAA5DA00A160AC /* AppAlert.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -534,20 +508,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5D960B3324DA78AD00B8A41D /* BitCoin.swift in Sources */,
 				5DA6948024DA8B1000A160AC /* CalculatorButton.swift in Sources */,
-				5DA6947C24DA8AC200A160AC /* LocationView.swift in Sources */,
 				5DA6948424DAC85200A160AC /* Button+Ext.swift in Sources */,
-				5DA6947E24DA8AF000A160AC /* LatLongButton.swift in Sources */,
 				5D28337324D928A700273317 /* ViewController.swift in Sources */,
 				5D960B3B24DA790400B8A41D /* UIView+Ext.swift in Sources */,
 				5D960B3724DA78D300B8A41D /* CalculatorViewModel.swift in Sources */,
 				5D28336F24D928A700273317 /* AppDelegate.swift in Sources */,
-				5DA6948224DAA5DA00A160AC /* AppAlert.swift in Sources */,
 				5D960B3524DA78BD00B8A41D /* ButtonAttributes.swift in Sources */,
-				5D960B3124DA78A000B8A41D /* Location.swift in Sources */,
 				5D960B3D24DA791400B8A41D /* Color+Ext.swift in Sources */,
-				5D960B2F24DA788A00B8A41D /* WebServices.swift in Sources */,
 				5D960B3924DA78E800B8A41D /* CalculatorViewController.swift in Sources */,
 				5D28337124D928A700273317 /* SceneDelegate.swift in Sources */,
 			);

@@ -19,49 +19,7 @@ class CalculatorTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
     
-    
-    
-    func testCheckAddressWebService(){
-        
-        let viewModel = CalculatorViewModel()
-        
-        weak var lat_long_expectation = expectation(description: "lat_long_expectation")
-        
-        viewModel.getAddressFromLatLong(lat: "59.31", long: "18.06") {
-            
-            if viewModel.currentAddress.count > 0 {
-                lat_long_expectation?.fulfill()
-            }
-        }
-        
-        waitForExpectations(timeout: 10) { (error) in
-            if(error != nil){
-                assertionFailure("Latitude and Longitude API failed with \(error?.localizedDescription ?? "error not readable")")
-            }
-        }
-        
-    }
-    
-    func testBitcoinWebservice(){
-        
-        let viewModel = CalculatorViewModel()
-        
-        weak var bitcoin_expectation = expectation(description: "bitcoin_expectation")
-        
-        viewModel.getCurrentBitCoinRate(amount: "1") {
-            if viewModel.currentBitCoinRate.count > 0 {
-                bitcoin_expectation?.fulfill()
-            }
-        }
-        
-        
-        waitForExpectations(timeout: 10) { (error) in
-            if(error != nil){
-                assertionFailure("Bitcoin API failed with \(error?.localizedDescription ?? "error not readable")")
-            }
-        }
-        
-    }
+ 
     
     //MARK: - Calculation Operation test
     
@@ -72,7 +30,7 @@ class CalculatorTests: XCTestCase {
         
         viewModel.mockInputs(leftNumber: ButtonAttributes.two.title, rightNumber: ButtonAttributes.two.title,operation: .plus)
         
-        viewModel.currentOperation(dataModel: .equal) { (result) in
+        viewModel.currentOperation(dataModel: .equal) { (result, _ ) in
             XCTAssertEqual(result, "4", "Addition Operation result shound 2 + 2 = 4")
         }
         
@@ -84,7 +42,7 @@ class CalculatorTests: XCTestCase {
         
         viewModel.mockInputs(leftNumber: ButtonAttributes.five.title, rightNumber: ButtonAttributes.seven.title,operation: .minus)
         
-        viewModel.currentOperation(dataModel: .equal) { (result) in
+        viewModel.currentOperation(dataModel: .equal) { (result, _) in
             XCTAssertEqual(result, "-2", "Substraction Operation result shound 5 - 7 = -2")
         }
         
@@ -96,7 +54,7 @@ class CalculatorTests: XCTestCase {
         
         viewModel.mockInputs(leftNumber: ButtonAttributes.six.title, rightNumber: ButtonAttributes.two.title,operation: .multiply)
         
-        viewModel.currentOperation(dataModel: .equal) { (result) in
+        viewModel.currentOperation(dataModel: .equal) { (result, _) in
             XCTAssertEqual(result, "12", "Multiplication Operation result shound 6 X 2 = 12")
         }
         
@@ -110,38 +68,13 @@ class CalculatorTests: XCTestCase {
         
         viewModel.mockInputs(leftNumber: devident, rightNumber: ButtonAttributes.five.title,operation: .divide)
         
-        viewModel.currentOperation(dataModel: .equal) { (result) in
+        viewModel.currentOperation(dataModel: .equal) { (result, _) in
             XCTAssertEqual(result, "4", "Division Operation result shound 20 / 5 = 5")
         }
         
     }
     
-    
-    func testSin(){
-        
-        let viewModel = CalculatorViewModel()
-        
-        let degrees = ButtonAttributes.nine.title + ButtonAttributes.zero.title
-        viewModel.mockInputs(leftNumber: degrees, operation: .sin)
-        
-        viewModel.currentOperation(dataModel: .sin) { (result) in
-            XCTAssertEqual(result, "1", "Sin Operation result shound bew 90 degrees = 1")
-        }
-        
-    }
-    
-    func testCos(){
-        
-        let viewModel = CalculatorViewModel()
-        
-        let degrees = ButtonAttributes.three.title + ButtonAttributes.six.title + ButtonAttributes.zero.title
-        viewModel.mockInputs(leftNumber: degrees, operation: .cos)
-        
-        viewModel.currentOperation(dataModel: .cos) { (result) in
-            XCTAssertEqual(result, "1", "Cos Operation result shound bew 360 degrees = 1")
-        }
-        
-    }
+     
      
     
     func testPerformanceExample() throws {
