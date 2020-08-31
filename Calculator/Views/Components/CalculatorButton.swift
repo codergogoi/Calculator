@@ -30,7 +30,7 @@ class CalculatorButton: UIButton {
         get{
             if let dataModel = self.dataModel{
                 switch dataModel {
-                case .divide, .multiply, .minus, .plus, .map:
+                case .divide, .multiply, .minus, .plus:
                     return true
                 default:
                     return false

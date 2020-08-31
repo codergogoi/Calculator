@@ -7,139 +7,155 @@
 //
 
 import UIKit
- 
+
 class CalculatorViewModel {
     
-    // essential private properties
-    private var location: Location?
-    private var bitCoin: BitCoin?
     
-    private var currentNumber: String = ""
-    private var lastNumber: String = ""
+    private var rightNumber: String = ""
+    private var leftNumber: String = ""
     private var currentOperation: ButtonAttributes = .ac
     private var buttons : [[ButtonAttributes]] = []
     
     private func setupDefaultFeatures(){
-      buttons.append([.ac, .btc, .map, .divide])
-      buttons.append([.seven,.eight, .nine, .multiply])
-      buttons.append([.four,.five, .six, .minus])
-      buttons.append([.one,.two, .three, .plus])
-      buttons.append([.zero, .decimal, .cos, .sin, .equal])
-  }
+        buttons.append([.ac, .plusminus, .percent, .divide])
+        buttons.append([.seven,.eight, .nine, .multiply])
+        buttons.append([.four,.five, .six, .minus])
+        buttons.append([.one,.two, .three, .plus])
+        buttons.append([.zero, .decimal, .equal])
+    }
     
     init(){
         setupDefaultFeatures()
-    }
-
-}
-
-//MARK: - API Calls
-extension CalculatorViewModel {
-    
-    func getAddressFromLatLong( lat: String, long: String,completion: @escaping()->()){
-        WebSerivce().getRequest(endPoint: "address/\(lat)/\(long)") { (response: Location?) in
-            if let location = response{
-                self.location = location
-            }else{
-                //throw error with custom message
-            }
-            completion()
-        }
-    }
-    
-    
-    func getCurrentBitCoinRate( amount: String,completion: @escaping()->()){
-        WebSerivce().getRequest(endPoint: "rate/\(amount)") { (response: BitCoin?) in
-            if let price = response{
-                self.bitCoin = price
-            }else{
-                //throw error with custom message
-            }
-            completion()
-        }
+        self.leftNumber = ""
     }
     
 }
+
 
 
 //MARK: - User Operations
 extension CalculatorViewModel {
     
     func resetLastNumber(){
-        self.lastNumber = ""
-        self.currentNumber = ""
+        self.leftNumber = ""
+        self.rightNumber = ""
+    }
+    // first collect numbers to left
+    
+    func currentOperation(dataModel: ButtonAttributes, completion: @escaping(_ number: String, _ isToggle: Bool) ->()){
+        
+        var result = ""
+        var toggle = false
+        
+        switch dataModel {
+        case .divide, .multiply, .minus, .plus:
+            //check if same operation exist
+                self.currentOperation = dataModel
+                if self.rightNumber.isEmpty {
+                    result = self.leftNumber
+                    return
+                }
+                result = self.formattedResult()
+                self.leftNumber = result
+                self.rightNumber = ""
+          case .equal:
+            if self.rightNumber.isEmpty{
+                self.rightNumber = self.leftNumber
+            }
+            result = self.formattedResult()
+            self.leftNumber = result
+            toggle = true
+        case .ac:
+            self.currentOperation = .ac
+            self.leftNumber = ""
+            self.rightNumber = ""
+            result = "0"
+            toggle = true
+        case .plusminus:
+             if self.currentOperation.isOperation{
+                self.rightNumber = self.togglePositiveNagetive(number: self.rightNumber)
+                result = self.rightNumber
+            }else{
+                 self.leftNumber = self.togglePositiveNagetive(number: self.leftNumber)
+                result = self.leftNumber
+            }
+            toggle = true
+        case .percent:
+            if self.currentOperation.isOperation{
+                  self.rightNumber = self.getPercentage(number: self.rightNumber)
+                  result = self.rightNumber
+              }else{
+                   self.leftNumber = self.getPercentage(number: self.leftNumber)
+                  result = self.leftNumber
+              }
+              toggle = true
+        default:
+            if self.currentOperation.isOperation{
+                toggle = true
+                if self.rightNumber.contains(".") && dataModel == .decimal{
+                    return
+                }
+                self.rightNumber.append(dataModel.title)
+                result = rightNumber
+                
+            }else{
+                 if self.leftNumber.contains(".") && dataModel == .decimal{
+                    return
+                }
+                self.leftNumber.append(dataModel.title)
+                result = leftNumber
+            }
+            
+        }
+        
+        completion(result,toggle)
+        
+        
+    }
+    
+    fileprivate func getPercentage(number: String)-> String{
+         if let percent = Double(number){
+            return self.formatNumber(number: percent * 0.01)
+        }
+        
+        return  number
     }
     
     
-    func currentOperation(dataModel: ButtonAttributes, completion: @escaping(_ number: String) ->()){
-        
-        var result = ""
-        switch dataModel {
-        case .divide, .multiply, .minus, .plus:
-            self.currentOperation = dataModel
-            result = lastNumber
-        case .cos, .sin:
-            self.currentOperation = dataModel
-            result = formattedResult()
-        case .ac:
-            self.currentOperation = .ac
-            self.lastNumber = ""
-            self.currentNumber = ""
-            result = "0"
-        case .equal:
-            result = self.currentOperation != .btc ? self.formattedResult() : lastNumber
-        case .btc:
-            self.getCurrentBitCoinRate(amount: self.lastNumber.isEmpty ? "1" : self.lastNumber){
-                completion(self.currentBitCoinRate)
-            }
-            self.lastNumber = ""
-            self.currentNumber = ""
-            
-        default:
-            
-            if(currentOperation != .ac){
-                if self.currentNumber.contains(".") && dataModel == .decimal{
-                    return
-                }
-                self.currentNumber = self.currentNumber + dataModel.title
-                result = currentNumber
-            }else{
-                if self.lastNumber.contains(".") && dataModel == .decimal{
-                    return
-                }
-                self.lastNumber = self.lastNumber + dataModel.title
-                result = lastNumber
-            }
+    
+    
+    fileprivate func togglePositiveNagetive(number: String)-> String{
+        // - TODO: - Need to check for zero plus minus
+        if let toggleNumber = Double(number){
+             return self.formatNumber(number: -toggleNumber)
         }
         
-        if(currentOperation != .btc){
-            completion(result)
-        }
+        return  number
+    }
+    
+    
+    fileprivate func formatNumber(number: Double) -> String{
         
+        if number.truncatingRemainder(dividingBy: 1) == 0 {
+           return "\(Int(number))"
+        }
+        return "\(number)"
+      
     }
     
     
     fileprivate func formattedResult() -> String{
         
-        var calculatedResult: Double = 0
+        let calculatedResult: Double = self.performOperations()
+        return self.formatNumber(number: calculatedResult)
         
-        if currentOperation == .cos || currentOperation == .sin {
-           calculatedResult = self.performDegreeCalculation()
-        }else{
-          calculatedResult =  self.performOperations()
-        }
- 
-        if calculatedResult.truncatingRemainder(dividingBy: 1) == 0 {
-            return "\(Int(calculatedResult))"
-        }else{
-            return "\(calculatedResult)"
-        }
+       
     }
     
     
     fileprivate func performOperations() -> Double{
         
-        guard let leftNumber = Double(self.lastNumber), let rightNumber = Double(self.currentNumber) else{
+        guard let leftNumber = Double(self.leftNumber), let rightNumber = Double(self.rightNumber) else{
             return 0
         }
         
@@ -161,19 +177,6 @@ extension CalculatorViewModel {
         
     }
     
-    fileprivate func performDegreeCalculation() -> Double{
-        
-        guard let degrees = Double(self.lastNumber) else{
-                   return 0
-        }
-        
-        if currentOperation == .cos{
-            return cos(degrees * .pi / 180)
-        }else{
-            return  sin(degrees * .pi / 180)
-        }
-      
-    }
     
 }
 
@@ -184,44 +187,16 @@ extension CalculatorViewModel{
     func options() -> [[ButtonAttributes]]{
         return self.buttons
     }
-    
-    var currentAddress: String{
-        get{
-            if let address = self.location?.address{
-                return address
-            }
-            return ""
-        }
-    }
-    
-    var currentBitCoinRate: String {
-        get{
-            
-            guard let rate = self.bitCoin?.price, let coins = self.bitCoin?.btc else {
-                return ""
-            }
-            
-            return "\(pluralize(coinValue: coins)) = \n $\(rate)"
-        }
-    }
-    
-    private func pluralize(coinValue: String) -> String{
-        
-        if let value = Int(coinValue) {
-            return value > 1 ? "\(coinValue) Bitcoins" : "\(coinValue) Bitcoin"
-        }
-        return "\(coinValue) Bitcoin"
-        
-    }
      
+    
     
 }
 //MARK: - UnitTest Input
 extension CalculatorViewModel{
     
     func mockInputs(leftNumber: String = "0", rightNumber: String = "0", operation: ButtonAttributes){
-        self.lastNumber = leftNumber
-        self.currentNumber = rightNumber
+        self.leftNumber = leftNumber
+        self.rightNumber = rightNumber
         self.currentOperation = operation
     }
     

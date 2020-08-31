@@ -42,21 +42,6 @@ class CalculatorViewController: UIViewController {
         return lbl
     }()
     
-    // Location View for Address Display
-    let locationView = LocationView()
-    var onLocationOperation = false
-    var locationViewIntialTransform: CGAffineTransform?
-    
-    //alert View
-    let alert = AppAlert()
-    
-    var alertTransform: CGAffineTransform?
-    var isShowAlert = false{
-        didSet{
-            self.onShowHideAlert()
-        }
-    }
-    
     
     //ViewModel
     fileprivate var viewModel: CalculatorViewModel?
@@ -75,6 +60,7 @@ class CalculatorViewController: UIViewController {
     //MARK: - FireBase
     var remoteConfig: RemoteConfig?
     
+    // We will show hide some of the operation through remote config
     private func setupRemoteConfigDefaults(){
         let defaultValues = [
             RemoteKeys.isMap.rawValue : true as NSObject,
@@ -83,8 +69,8 @@ class CalculatorViewController: UIViewController {
             RemoteKeys.isMultiply.rawValue: true as NSObject,
             RemoteKeys.isMinus.rawValue: true as NSObject,
             RemoteKeys.isPlus.rawValue: true as NSObject,
-            RemoteKeys.isCos.rawValue: true as NSObject,
-            RemoteKeys.isSign.rawValue: true as NSObject,
+            RemoteKeys.plusMinus.rawValue: true as NSObject,
+            RemoteKeys.percent.rawValue: true as NSObject,
         ]
         remoteConfig = RemoteConfig.remoteConfig()
         remoteConfig?.setDefaults(defaultValues)
@@ -102,7 +88,7 @@ class CalculatorViewController: UIViewController {
                     }
                 }
             }
-
+            
         }
     }
     
@@ -141,16 +127,12 @@ class CalculatorViewController: UIViewController {
         super.viewWillAppear(animated)
     }
     
-//    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-//        fatalError("Touch not responding... fake news!")
-//    }
-     
     
     deinit {
         print("================================")
         print("Deinit Successfully: No retain cycle detected! :)")
         print("================================")
-
+        
     }
 }
 
@@ -163,20 +145,20 @@ extension CalculatorViewController {
     fileprivate func setupViews(){
         
         self.view.addSubview(resultView)
-
+        
         self.contentView.spacing = spacing
         self.view.addSubview(contentView)
-
+        
         resultView.leadingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.leadingAnchor).isActive = true
         resultView.trailingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.trailingAnchor).isActive = true
         resultView.topAnchor.constraint(equalTo: self.view.layoutMarginsGuide.topAnchor).isActive = true
         resultView.heightAnchor.constraint(equalTo: self.view.heightAnchor, multiplier: 0.35, constant: 0).isActive = true
-
+        
         resultView.addSubview(lblResult)
         lblResult.leadingAnchor.constraint(equalTo: resultView.leadingAnchor, constant: spacing).isActive = true
         lblResult.trailingAnchor.constraint(equalTo: resultView.trailingAnchor, constant: -spacing).isActive = true
         lblResult.bottomAnchor.constraint(equalTo: resultView.bottomAnchor, constant: -spacing).isActive = true
-
+        
         contentView.leadingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.leadingAnchor).isActive = true
         contentView.trailingAnchor.constraint(equalTo: self.view.layoutMarginsGuide.trailingAnchor).isActive = true
         contentView.topAnchor.constraint(equalTo: resultView.bottomAnchor, constant: spacing).isActive = true
@@ -208,77 +190,25 @@ extension CalculatorViewController {
                 }
             }
         }
-
- 
-        self.setupLocationView()
-        self.setupAlertView()
+        
         
     }
     
     
-    
-    fileprivate func setupLocationView(){
-        
-        self.resultView.addSubview(locationView)
-        locationView.leadingAnchor.constraint(equalTo: resultView.leadingAnchor).isActive = true
-        locationView.trailingAnchor.constraint(equalTo: resultView.trailingAnchor).isActive = true
-        locationView.topAnchor.constraint(equalTo: resultView.topAnchor).isActive = true
-        locationView.bottomAnchor.constraint(equalTo: resultView.bottomAnchor, constant: -spacing).isActive = true
-        self.locationViewIntialTransform = self.locationView.transform
-        self.locationView.transform =  locationView.transform.translatedBy(x: locationView.transform.tx, y: -500)
-        locationView.didTapLatLong = {[weak self] in
-            guard let self = self else {
-                return
-            }
-            self.viewModel?.resetLastNumber()
-          }
-
-        locationView.didTapFindAddress = { [weak self] (lat, long) in
-            
-            guard let self = self else { return }
-            
-             self.viewModel?.getAddressFromLatLong(lat: lat, long: long, completion: { [weak self] in
-                
-                if let self = self{
-                    let currentAddress = self.viewModel?.currentAddress
-                    self.locationView.currentAddress = currentAddress
-                    Analytics.logEvent("address_search", parameters: ["lat": lat, "long": long, "address": currentAddress ?? "Invalid Lat long used to search Address" ])
-                }
-             
-           })
-              
-        }
-        
-    }
-    
-    fileprivate func setupAlertView(){
-        resultView.addSubview(alert)
-        alert.leadingAnchor.constraint(equalTo: resultView.leadingAnchor).isActive = true
-        alert.trailingAnchor.constraint(equalTo: resultView.trailingAnchor).isActive = true
-        alert.topAnchor.constraint(equalTo: resultView.topAnchor).isActive = true
-        alert.bottomAnchor.constraint(equalTo: resultView.bottomAnchor, constant: -spacing).isActive = true
-        self.alertTransform = alert.transform
-        self.alert.transform =  alert.transform.translatedBy(x: alert.transform.tx, y: -500)
-        self.alert.didTapOk = {[weak self] in
-            guard let self = self else { return }
-            self.isShowAlert = false
-        }
- 
-    }
     
     fileprivate func onSetupToggleFunctions(){
         
         _ = self.contentView.subviews.compactMap { (stackView) -> UIStackView? in
-             for button  in stackView.subviews{
+            for button  in stackView.subviews{
                 if let currentButton = button as? CalculatorButton{
                     if let key = currentButton.dataModel?.remoteKey{
                         if key != .none{
                             if let status = self.remoteConfig?.configValue(forKey: key.rawValue).boolValue{
                                 if !status{
-                                     currentButton.removeFromSuperview()
+                                    currentButton.removeFromSuperview()
                                 }
                             }
-                         }
+                        }
                     }
                 }
             }
@@ -290,7 +220,6 @@ extension CalculatorViewController {
 }
 
 
-
 //MARK: - User Operations
 extension CalculatorViewController {
     
@@ -298,100 +227,26 @@ extension CalculatorViewController {
     fileprivate func didTapButton(dataModel: ButtonAttributes){
         
         
-        if self.isShowAlert{
-            self.isShowAlert = false
-        }
         
-        switch dataModel {
-        case .map:
-            if !self.isIntenetAvailable  {
-                self.isShowAlert = true
-                return
-            }
-            
-            self.locationView.clearHistory()
-            onTapMap()
-            Analytics.logEvent("map", parameters: nil)
-            
-        case .btc, .divide, .multiply, .minus, .plus, .equal, .cos, .sin:
-            
-            if dataModel == .btc {
-                Analytics.logEvent("bitcoin", parameters: nil)
-            }else{
-                Analytics.logEvent("offline_operations", parameters: nil)
-            }
-            
-            if dataModel == .btc && !self.isIntenetAvailable{
-                self.isShowAlert = true
-                return;
-            }
-            if onLocationOperation {
-                onTapMap()
-            }
-            
-            self.viewModel?.currentOperation(dataModel: dataModel) { [weak self] (result) in
-                guard let self = self else { return }
-                DispatchQueue.main.async {
-                    self.lblResult.text = result
-                }
-                }
-        default:
-             if let existingOperation = self.lastSelectedOperator{
-                existingOperation.resetToggle()
-            }
-            self.viewModel?.currentOperation(dataModel: dataModel) { [weak self] (result) in
-                guard let self = self else { return  }
-                DispatchQueue.main.async {
-                    if self.onLocationOperation{
-                        self.locationView.currentInput = result
-                    }else{
-                        self.lblResult.text = result
+        
+        
+        self.viewModel?.currentOperation(dataModel: dataModel) { [weak self] (result, isToggle) in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.lblResult.text = result
+                if isToggle{
+                    if let existingOperation = self.lastSelectedOperator{
+                        existingOperation.resetToggle()
                     }
                 }
-            }
-        }
-        
-    }
-    
-    // Show Hide Location View Animation
-    fileprivate func onTapMap(){
-        
-//        self.dismiss(animated: true, completion: nil) // to check retain cycle
-             
-        self.onLocationOperation = !self.onLocationOperation
-         
-        UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseInOut, animations: {
-            if self.onLocationOperation{
-                if let initialTransform = self.locationViewIntialTransform{
-                    self.lblResult.isHidden = true
-                    self.locationView.transform =  initialTransform
-                }
-            }else{
-                self.locationView.transform =  self.locationView.transform.translatedBy(x: self.locationView.transform.tx, y: -500)
-                self.lblResult.isHidden = false
                 
             }
-            
-        }, completion: nil)
-     }
-    
-    //Show Hide Alert View Animation
-    fileprivate func onShowHideAlert(){
-        
-        DispatchQueue.main.async {
-            UIView.animate(withDuration: 0.4, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.7, options: .curveEaseInOut, animations: {
-                if self.isShowAlert{
-                    if let initialTransform = self.alertTransform{
-                        self.alert.transform =  initialTransform
-                    }
-                }else{
-                    self.alert.transform =  self.alert.transform.translatedBy(x: self.alert.transform.tx, y: -500)
-                }
-            }, completion: nil)
         }
         
         
+        
     }
+    
     
 }
 
